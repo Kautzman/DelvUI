@@ -303,7 +303,7 @@ namespace DelvUI.Interface.PartyCooldowns
                         ImGui.PushItemWidth(160);
                         ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 4);
 
-                        if (ImGui.DragInt($"##{cooldown.ActionId}_priority", ref cooldown.Priority, 1, 0, 100))
+                        if (ImGui.DragInt($"##{cooldown.ActionId}_priority", ref cooldown.Priority, 1, 0, 100, "%i", ImGuiSliderFlags.NoInput))
                         {
                             changed = true;
                             CooldownsDataChangedEvent?.Invoke(this);
@@ -318,7 +318,7 @@ namespace DelvUI.Interface.PartyCooldowns
                         ImGui.PushItemWidth(160);
                         ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 4);
 
-                        if (ImGui.DragInt($"##{cooldown.ActionId}_column", ref cooldown.Column, 0.1f, 1, ColumnCount))
+                        if (ImGui.DragInt($"##{cooldown.ActionId}_column", ref cooldown.Column, 0.1f, 1, ColumnCount, "%i", ImGuiSliderFlags.NoInput))
                         {
                             changed = true;
                             CooldownsDataChangedEvent?.Invoke(this);
@@ -366,13 +366,14 @@ namespace DelvUI.Interface.PartyCooldowns
             [25868] = NewData(25868, JobIDs.SCH, 90, 120, 20, 80, 2), // expedient
             [16536] = NewData(16536, JobIDs.WHM, 80, 120, 20, 80, 2), // temperance
             [3569] = NewData(3569, JobIDs.WHM, 52, 90, 24, 50, 2), // asylum
+            [25862] = NewData(25862, JobIDs.WHM, 90, 180, 15, 80, 2), // liturgy of the bell
             [24298] = NewData(24298, JobIDs.SGE, 50, 30, 15, 80, 2), // kerachole
             [24310] = NewData(24310, JobIDs.SGE, 76, 120, 20, 80, 2), // holos
             [24311] = NewData(24311, JobIDs.SGE, 80, 120, 15, 80, 2), // panhaima
 
             // MELEE
             [7549] = NewData(7549, JobRoles.DPSMelee, 22, 90, 10, 100, 1), // feint
-            [2258] = NewData(2258, JobIDs.NIN, 18, 60, 15, 30, 3), // trick attack
+            [2248] = NewData(2248, JobIDs.NIN, 15, 120, 20, 30, 3), // mug
             [3557] = NewData(3557, JobIDs.DRG, 52, 120, 15, 30, 3), // battle litany
             [7396] = NewData(7396, JobIDs.MNK, 70, 120, 15, 90, 3), // brotherhood
             [65] = NewData(65, JobIDs.MNK, 42, 90, 15, 50, 2), // mantra
