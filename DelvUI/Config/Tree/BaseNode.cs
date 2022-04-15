@@ -251,6 +251,12 @@ namespace DelvUI.Config.Tree
                     ConfigurationManager.Instance.LockHUD = !ConfigurationManager.Instance.LockHUD;
                 }
 
+                ImGui.SameLine();
+                if (ImGui.Button("$", new Vector2(20, 0)))
+                {
+                    CastbarHud.RebuildReplacementMap();
+                }
+
                 ImGui.PopStyleVar();
 
                 ImGui.SameLine();

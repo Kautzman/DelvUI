@@ -494,5 +494,13 @@ namespace DelvUI.Interface.GeneralElements
                 _ => (-1, -1)
             };
         }
+
+        public (int, int) GetHealerStanceState()
+        {
+            return Config.TankStanceIndicatorConfig.ActiveColor switch
+            {
+                var topRight = Utils.GetAnchoredPosition(GetTankStanceCornerOrigin + Config.Position, Config.Size, Config.Anchor)
+            }
+        }
     }
 }

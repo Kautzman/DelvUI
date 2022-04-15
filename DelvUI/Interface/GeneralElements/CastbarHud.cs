@@ -9,6 +9,8 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
+using System.Linq;
 using System.Numerics;
 using System.Text;
 
@@ -27,6 +29,9 @@ namespace DelvUI.Interface.GeneralElements
         protected override bool AnchorToParent => Config is UnitFrameCastbarConfig { AnchorToUnitFrame: true };
         protected override DrawAnchor ParentAnchor => Config is UnitFrameCastbarConfig config ? config.UnitFrameAnchor : DrawAnchor.Center;
 
+        private static Dictionary<string, string> replacementMap = new Dictionary<string, string>();
+        private static Dictionary<string, string> replacementContainsMap = new Dictionary<string, string>();
+
         public CastbarHud(CastbarConfig config, string? displayName = null) : base(config, displayName)
         {
             _castNameLabel = new LabelHud(config.CastNameLabel);
@@ -36,6 +41,35 @@ namespace DelvUI.Interface.GeneralElements
         public void StopPreview()
         {
             Config.Preview = false;
+        }
+
+        static CastbarHud()
+        {
+            RebuildReplacementMap();
+        }
+
+        public static void RebuildReplacementMap()
+        {
+
+            try
+            {
+                replacementMap = File.ReadLines("replacementMap.csv").Select(line => line.Split(',')).ToDictionary(line => line[0], line => line[1]);
+
+            }
+            catch (Exception ex)
+            {
+                File.AppendAllText("debug.txt", $"Replacement Map: \n{ex.Message}\n {ex.ToString()}");
+            }
+
+
+            try
+            {
+                replacementContainsMap = File.ReadLines("replacementContainsMap.csv").Select(line => line.Split(',')).ToDictionary(line => line[0], line => line[1]);
+            }
+            catch (Exception ex)
+            {
+                File.AppendAllText("debug.txt", $"Replacement Contains Map: \n{ex.Message}\n {ex.ToString()}");
+            }
         }
 
         protected override (List<Vector2>, List<Vector2>) ChildrenPositionsAndSizes() => (new List<Vector2> { Config.Position }, new List<Vector2> { Config.Size });
@@ -109,10 +143,24 @@ namespace DelvUI.Interface.GeneralElements
                 });
             }
 
-            // cast name
             bool isNameLeftAnchored = Config.CastNameLabel.TextAnchor is DrawAnchor.Left or DrawAnchor.TopLeft or DrawAnchor.BottomLeft;
             Vector2 namePos = Config.ShowIcon && isNameLeftAnchored ? startPos + new Vector2(iconSize.X, 0) : startPos;
             string? castName = LastUsedCast?.ActionText.CheckForUpperCase();
+
+            if (castName != null)
+            {
+                castName = replacementMap.GetValueOrDefault(castName, castName);
+
+                foreach(KeyValuePair<string, string> kvp in replacementContainsMap)
+                {
+                    if(castName.Contains(kvp.Key))
+                    {
+                        castName = kvp.Value;
+                        break;
+                    }
+                }
+            }
+
             Config.CastNameLabel.SetText(Config.Preview ? "Cast Name" : castName ?? "");
 
             AddDrawAction(Config.CastNameLabel.StrataLevel, () =>
